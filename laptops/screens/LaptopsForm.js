@@ -1,31 +1,56 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import { Input, Button } from "@rneui/base";
-import { saveLaptopRest } from "../rest_client/laptops";
+import { saveLaptopRest,updateLaptopRest } from "../rest_client/laptops";
 
-export const LaptopsForm = ({ navigation }) => {
-  const [brand, setBrand] = useState("");
-  const [processor, setProcessor] = useState("");
-  const [memory, setMemory] = useState("");
-  const [disk, setDisk] = useState("");
+export const LaptopsForm = ({ navigation, route }) => {
+    const laptopRetrieved = route.params?.laptopParam || null;
+    const isNew = laptopRetrieved === null;
+
+    const [brand, setBrand] = useState(isNew ? "" : laptopRetrieved.marca);
+    const [processor, setProcessor] = useState(isNew ? "" : laptopRetrieved.procesador);
+    const [memory, setMemory] = useState(isNew ? "" : laptopRetrieved.memoria);
+    const [disk, setDisk] = useState(isNew ? "" : laptopRetrieved.disco);
 
   const showMessage = () => {
-    Alert.alert("CONFIRMACIÓN", "Se creó la laptop exitosamente");
+    Alert.alert("CONFIRMACIÓN", isNew ? "Se creó la laptop exitosamente" : "Laptop actualizada exitosamente");
+    navigation.goBack();
   };
 
   const saveLaptop = () => {
-    console.log("saveLaptop");
-    navigation.goBack();
+   
+   
     saveLaptopRest(
       {
-        brand: brand,
-        processor: processor,
-        memory: memory,
-        disk: disk,
+        brand,
+         processor,
+       memory,
+        disk,
       },
       showMessage
     );
   };
+
+
+  const updateLaptop = () => {
+    updateLaptopRest(
+      {
+        id: laptopRetrieved.id,
+        brand,
+        processor,
+        memory,
+        disk,
+      },
+      showMessage
+    );
+  };
+
+
+
+
+
+
+
 
   return (
     <View style={styles.container}>
@@ -49,7 +74,7 @@ export const LaptopsForm = ({ navigation }) => {
         placeholder="Ingrese el disco"
         onChangeText={(value) => setDisk(value)}
       />
-      <Button title="Guardar" onPress={saveLaptop} />
+      <Button title="Guardar" onPress={isNew ? saveLaptop : updateLaptop} />
     </View>
   );
 };

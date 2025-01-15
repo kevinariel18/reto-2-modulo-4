@@ -51,3 +51,36 @@ export const saveLaptopRest = (laptop, fnShowMessage) => {
       console.error("Error en la solicitud:", error);
     });
 };
+
+
+
+export const updateLaptopRest = (laptop, fnShowMessage) => {
+  const config = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: laptop.id,
+      marca: laptop.brand,
+      procesador: laptop.processor,
+      memoria: laptop.memory,
+      disco: laptop.disk,
+    }),
+  };
+
+  fetch(URL + "laptops/" + laptop.id, config)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error al actualizar la laptop");
+      }
+      return response.json();
+    })
+    .then((body) => {
+      fnShowMessage();
+      console.log("Laptop actualizada:", body);
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud:", error);
+    });
+};
