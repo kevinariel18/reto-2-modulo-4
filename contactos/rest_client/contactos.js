@@ -35,7 +35,7 @@ export const saveContactRest=(contact,fnShowMessage)=>{
    )
    .then(response=>response.json())
    .then(body=>{
-      fnShowMessage();
+      fnShowMessage("se ha creado el contacto");
       console.log(body);
    });
 }
@@ -58,7 +58,24 @@ export const updateContactRest=(contact,fnShowMessage)=>{
    )
    .then(response=>response.json())
    .then(body=>{
-      fnShowMessage();
+      fnShowMessage("contacto actualizado");
+      console.log(body);
+   });
+}
+
+
+
+export const deleteContactRest=(contact,fnShowMessage)=>{
+   const config={
+      method:"DELETE",
+      
+   }
+   fetch(
+      URL+"contactos/"+contact.id,config
+   )
+   .then(response=>response.json())
+   .then(body=>{
+      fnShowMessage("se ha eliminado el contacto");
       console.log(body);
    });
 }

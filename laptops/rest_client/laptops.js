@@ -21,7 +21,6 @@ export const getAllLaptops = (fnRefreshList) => {
     });
 };
 
-
 export const saveLaptopRest = (laptop, fnShowMessage) => {
   const config = {
     method: "POST",
@@ -52,8 +51,6 @@ export const saveLaptopRest = (laptop, fnShowMessage) => {
     });
 };
 
-
-
 export const updateLaptopRest = (laptop, fnShowMessage) => {
   const config = {
     method: "PUT",
@@ -79,6 +76,28 @@ export const updateLaptopRest = (laptop, fnShowMessage) => {
     .then((body) => {
       fnShowMessage();
       console.log("Laptop actualizada:", body);
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud:", error);
+    });
+};
+
+// NUEVO: Función para eliminar una laptop
+export const deleteLaptopRest = (id, fnShowMessage) => {
+  const config = {
+    method: "DELETE",
+  };
+
+  fetch(URL + "laptops/" + id, config)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error al eliminar la laptop");
+      }
+      return response.json();
+    })
+    .then((body) => {
+      fnShowMessage();
+      console.log("Laptop eliminada:", body);
     })
     .catch((error) => {
       console.error("Error en la solicitud:", error);

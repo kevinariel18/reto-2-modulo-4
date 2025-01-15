@@ -1,28 +1,33 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList,TouchableHighlight } from "react-native";
-import { Button, ListItem,FAB } from "@rneui/base";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, FlatList, TouchableHighlight } from "react-native";
+import { ListItem, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
 
 export const LaptopsList = ({ navigation }) => {
   const [laptopsList, setLaptopsList] = useState([]);
 
+  // Cargar la lista de laptops automáticamente cuando el componente se monta
+  useEffect(() => {
+    getAllLaptops(fnRefreshList);
+  }, []);
+
   const LaptopItem = ({ laptop }) => {
     return (
       <TouchableHighlight
-      onPress={() => {
-        navigation.navigate("LaptopsFormNav", { laptopParam: laptop });
-      }}
+        onPress={() => {
+          navigation.navigate("LaptopsFormNav", { laptopParam: laptop });
+        }}
       >
-      <ListItem>
-        <ListItem.Content>
-          <ListItem.Title>
-            {laptop.marca} ({laptop.procesador})
-          </ListItem.Title>
-          <ListItem.Subtitle>
-            Memoria: {laptop.memoria}, Disco: {laptop.disco}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem>
+        <ListItem>
+          <ListItem.Content>
+            <ListItem.Title>
+              {laptop.marca} ({laptop.procesador})
+            </ListItem.Title>
+            <ListItem.Subtitle>
+              Memoria: {laptop.memoria}, Disco: {laptop.disco}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
       </TouchableHighlight>
     );
   };
@@ -34,18 +39,12 @@ export const LaptopsList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de laptops</Text>
-      <Button
-        title="Consultar Laptops"
-        onPress={() => {
-          getAllLaptops(fnRefreshList);
-        }}
-      />
       <FlatList
         data={laptopsList}
         renderItem={({ item }) => <LaptopItem laptop={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
-       <FAB
+      <FAB
         title="+"
         onPress={() => {
           navigation.navigate("LaptopsFormNav");

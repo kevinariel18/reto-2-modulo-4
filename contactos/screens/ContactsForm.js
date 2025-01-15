@@ -1,7 +1,7 @@
 import { View,Text,StyleSheet,Alert } from "react-native"
 import {Input,Button} from "@rneui/base"
 import { useState } from "react"
-import {saveContactRest,updateContactRest} from "../rest_client/contactos"
+import {saveContactRest,updateContactRest,deleteContactRest} from "../rest_client/contactos"
 
 
 export const  ContactsForm=({navigation,route})=>{
@@ -19,8 +19,8 @@ export const  ContactsForm=({navigation,route})=>{
  
    
 
-   const showMessage=()=>{
-      Alert.alert("CONFIRMACION",isNew?"SE CREO EL CONTACTO":"CPNTACTO ACTUALIZADO");
+   const showMessage=(message)=>{
+      Alert.alert("CONFIRMACION",message);
       navigation.goBack();
    }
    const createContact=()=>{
@@ -48,12 +48,30 @@ export const  ContactsForm=({navigation,route})=>{
       
       showMessage)
    }
+      
+   const confirmDelete=()=>{
+     Alert.alert("CONFIRMACION",
+      "ESTA SEGURO DE ELIMINAR",
+    [{
+      text:"SI",
+      onPress:deleteContact
+    },
+    {
+      text:"CANCELAR"
+    },
+  ]);
+   }
 
+   const  deleteContact=()=>{
+   deleteContactRest({
+    id:contactRetrieved.id
+   },showMessage)
+   }
        
     return <View style={styles.container}>
      
      <Input
-      value={name}
+      valuYYe={name}
       placeholder="INGRESE EL NOMBRE"
       onChangeText={(value)=>{
      setname(value);
@@ -77,6 +95,14 @@ export const  ContactsForm=({navigation,route})=>{
      title="GURDAR"
      onPress={isNew?createContact:updateContact}
      />
+     {
+      isNew?<View></View>:  <Button
+      title="ELIMINAR"
+      onPress={confirmDelete}
+    />
+
+     }
+     
     </View>
 }
 

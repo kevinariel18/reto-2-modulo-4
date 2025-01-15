@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import { Input, Button } from "@rneui/base";
-import { saveLaptopRest,updateLaptopRest } from "../rest_client/laptops";
+import { saveLaptopRest, updateLaptopRest, deleteLaptopRest } from "../rest_client/laptops"; // Importa deleteLaptopRest
 
 export const LaptopsForm = ({ navigation, route }) => {
-    const laptopRetrieved = route.params?.laptopParam || null;
-    const isNew = laptopRetrieved === null;
+  const laptopRetrieved = route.params?.laptopParam || null;
+  const isNew = laptopRetrieved === null;
 
-    const [brand, setBrand] = useState(isNew ? "" : laptopRetrieved.marca);
-    const [processor, setProcessor] = useState(isNew ? "" : laptopRetrieved.procesador);
-    const [memory, setMemory] = useState(isNew ? "" : laptopRetrieved.memoria);
-    const [disk, setDisk] = useState(isNew ? "" : laptopRetrieved.disco);
+  const [brand, setBrand] = useState(isNew ? "" : laptopRetrieved.marca);
+  const [processor, setProcessor] = useState(isNew ? "" : laptopRetrieved.procesador);
+  const [memory, setMemory] = useState(isNew ? "" : laptopRetrieved.memoria);
+  const [disk, setDisk] = useState(isNew ? "" : laptopRetrieved.disco);
 
   const showMessage = () => {
     Alert.alert("CONFIRMACIÓN", isNew ? "Se creó la laptop exitosamente" : "Laptop actualizada exitosamente");
@@ -18,19 +18,16 @@ export const LaptopsForm = ({ navigation, route }) => {
   };
 
   const saveLaptop = () => {
-   
-   
     saveLaptopRest(
       {
         brand,
-         processor,
-       memory,
+        processor,
+        memory,
         disk,
       },
       showMessage
     );
   };
-
 
   const updateLaptop = () => {
     updateLaptopRest(
@@ -45,12 +42,28 @@ export const LaptopsForm = ({ navigation, route }) => {
     );
   };
 
-
-
-
-
-
-
+  const deleteLaptop = () => {
+    Alert.alert(
+      "Confirmación",
+      "¿Estás seguro de que deseas eliminar esta laptop?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sí",
+          onPress: () => {
+            // Llamar a la función deleteLaptopRest
+            deleteLaptopRest(laptopRetrieved.id, () => {
+              console.log(`Laptop con ID ${laptopRetrieved.id} eliminada.`);
+              navigation.goBack(); // Volver a la lista
+            });
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -74,7 +87,10 @@ export const LaptopsForm = ({ navigation, route }) => {
         placeholder="Ingrese el disco"
         onChangeText={(value) => setDisk(value)}
       />
-      <Button title="Guardar" onPress={isNew ? saveLaptop : updateLaptop} />
+      <Button title={isNew ? "Guardar" : "Actualizar"} onPress={isNew ? saveLaptop : updateLaptop} />
+      {!isNew && (
+        <Button title="Eliminar" onPress={deleteLaptop} buttonStyle={{ backgroundColor: "red" }} />
+      )}
     </View>
   );
 };

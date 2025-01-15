@@ -5,7 +5,7 @@ const puerto = 3003;
 
 app.use(bodyParser.json());
 
-
+// Middleware para la ruta "/laptops"
 app.use("/laptops", (req, res, next) => {
     console.log("Middleware activado para laptops");
     console.log("Headers:", req.headers);
@@ -13,7 +13,7 @@ app.use("/laptops", (req, res, next) => {
     next();
 });
 
-
+// Obtener todas las laptops
 app.get("/laptops", (req, res) => {
     const laptops = [
         { id: 1, marca: "Lenovo", procesador: "Intel Core i5", memoria: "16 GB", disco: "1 TB" },
@@ -26,36 +26,35 @@ app.get("/laptops", (req, res) => {
     res.send(laptops);
 });
 
-
+// Crear una nueva laptop
 app.post("/laptops", (req, res) => {
-    const newLaptop = { ...req.body, id: 100 }; 
+    const newLaptop = { ...req.body, id: 100 };
     console.log("Laptop creada:", newLaptop);
     res.send(newLaptop);
 });
 
-
+// Obtener una laptop por ID
 app.get("/laptops/:id", (req, res) => {
     const id = req.params.id;
     const laptop = { id: parseInt(id), marca: "Marca Fija", procesador: "Procesador Fijo", memoria: "Memoria Fija", disco: "Disco Fijo" };
-    console.log(`Recuperando laptop con ID: `,id);
+    console.log(`Recuperando laptop con ID: `, id);
     res.send(laptop);
 });
 
-
+// Actualizar una laptop por ID
 app.put("/laptops/:id", (req, res) => {
     const id = req.params.id;
-    console.log("Actualizando laptop con ID: ",id);
-    res.send(req.body); 
+    console.log("Actualizando laptop con ID: ", id);
+    res.send(req.body);
 });
 
-
+// Eliminar una laptop por ID
 app.delete("/laptops/:id", (req, res) => {
     const id = req.params.id;
-    console.log("Eliminando laptop con ID:",id);
-    res.status(200).send();
+    console.log("Eliminando laptop con ID:", id);
+    res.status(200).send({ id: id });
 });
 
-
 app.listen(puerto, () => {
-    console.log(`Servidor backendLaptops corriendo en el puerto `,puerto);
+    console.log(`Servidor backendLaptops corriendo en el puerto `, puerto);
 });
