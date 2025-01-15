@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { Button, ListItem } from "@rneui/base";
+import { Button, ListItem,FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
 
-export const LaptopsList = () => {
+export const LaptopsList = ({ navigation }) => {
   const [laptopsList, setLaptopsList] = useState([]);
 
   const LaptopItem = ({ laptop }) => {
@@ -38,6 +38,13 @@ export const LaptopsList = () => {
         data={laptopsList}
         renderItem={({ item }) => <LaptopItem laptop={item} />}
         keyExtractor={(item) => item.id.toString()}
+      />
+       <FAB
+        title="+"
+        onPress={() => {
+          navigation.navigate("LaptopsFormNav");
+        }}
+        placement="right"
       />
     </View>
   );
